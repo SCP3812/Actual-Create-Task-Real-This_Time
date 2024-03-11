@@ -2,6 +2,7 @@ import random
 import math
 
 # https://editor.p5js.org/Koala_Sloth/sketches/Q4IbqVQhN
+#create a program which simulates the downfall of western civilization
 
 GOAL = 50000
 NUM_MEN = 20 
