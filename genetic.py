@@ -74,14 +74,65 @@ def selector(population, to_retain, truf):
         return selected_males
 
 def breed(males, females, family_size):
-    
-    return
+    random.shuffle(males)
+    random.shuffle(females)
+    ave_length = math.floor((len(males) + len(females))/2)
+    children = []
+    n=0
+    while n < ave_length:
+        n+=1
+        n1=0
+        while n < 0:
+            n1+=1
+            child = human(n1, INITIAL_MIN_WT)
+            child.breeding_weight(females[n1].weight, males[n1].weight)
+            children.append(child)
+    return children
 
 def mutate(children, mutate_odds, mutate_min, mutate_max)
-    return
+    n=0
+    while n < len(children):
+        n+=1
+        if mutate_odds >= math.random():
+            children[i].mutate(mutate_min, mutate_max)
+        else :
+            children[i] = children[i]
+    return children
 
-def main():
-    return
+generations = 0
+parents = populate(NUM_RATS, INITIAL_MIN_WT, INITIAL_MAX_WT, INITIAL_MODE_WT)
+init_pop_wts = []
+
+n=0
+while n < NUM_MEN:
+    n+=1
+    init_pop_wts.append(parents[n].weight)
+
+print("initial population weights = " + init_pop_wts)
+popl_fitness = fitness(parents, GOAL)
+print("initial population fitness = " + popl_fitness)
+print("number to retain = " + NUM_MEN)
+
+ave_wt = []
+
+while popl_fitness < 1 and generations < GENERATION_LIMIT:
+    selected_females = selector(parents, NUM_RATS, true)
+    selected_males = selector(parents, NUM_RATS, false)
+    children = breed(selected_males, selected_females, LITTER_SIZE)
+    weight_hold = []
+    children = mutate(children, MUTATE_ODDS, MUTATE_MIN, MUTATE_MAX)
+    place_hold = selected_males + selected_females
+    parents = place_hold + children
+        for i in parents:
+            weight_hold.append(i.weight)
+    popl_fitness = fitness(parents, GOAL)
+    print("Generation " + generations + " fitness: " + popl_fitness)
+    ave_wt.append(math.floor(statistics.mean(weight_hold)))
+    generations+=1
+print("average weight per generation = " + ave_wt)
+print("number of generation = " + generations)
+print("number of years = " + Math.floor(generations / LITTERS_PER_YEAR))
+
 
 
 
