@@ -30,10 +30,10 @@ class human:
         else:
             x = (b-a) * (b-c)
             self.weight = math.floor(b - math.sqrt(x*(1.0-u)))
-    def breeding_weight(femal_wt, mal_wt):
-        self.weight = randrange(femal_wt, mal_wt)  
-    def mutate(mutate_min, mutate_max):
-        self.weight = math.ceil(self.weight * randrange(mutate_min, mutate_max))  
+    def breeding_weight(self, femal_wt, mal_wt):
+        self.weight = random.randrange(mal_wt, femal_wt)  
+    def mutate(self, mutate_min, mutate_max):
+        self.weight = math.ceil(self.weight * random.uniform(mutate_min, mutate_max))  
 
 if(NUM_MEN % 2 != 0):
     NUM_MEN+=1
@@ -54,25 +54,21 @@ def fitness(population, goal):
     place_hold = []
     for ppl in population:
         place_hold.append(ppl.weight)
-        print(ppl.weight)
-    print(place_hold)
     ave = statistics.mean(place_hold)
     return ave/goal
 
 def selector(population, to_retain, truf):
     sorted_population = sorted(population, key = lambda x: x.weight, reverse=True)
     if len(sorted_population) > to_retain:
-        sorted_population = sorted_population.slice(-to_retain)
+        sorted_population = sorted_population[0:to_retain]
     to_retain_by_sex = math.floor(to_retain/2)
     members_per_sex = math.floor(len(sorted_population)/2)
     females = sorted_population[0:members_per_sex]
     males = sorted_population[members_per_sex:len(sorted_population)]
-    selected_females = females[to_retain_by_sex:len(females)]
-    selected_males = males[to_retain_by_sex:len(males)]
     if truf == True:
-        return selected_females
+        return females
     elif truf == False:
-        return selected_males
+        return males
 
 def breed(males, females, family_size):
     random.shuffle(males)
@@ -81,23 +77,24 @@ def breed(males, females, family_size):
     children = []
     n=0
     while n < ave_length:
-        n+=1
         n1=0
-        while n < 0:
+        while n1 < FAMILY_SIZE:
             n1+=1
-            child = human(n1, INITIAL_MIN_WT)
-            child.breeding_weight(females[n1].weight, males[n1].weight)
+            child = human(INITIAL_MIN_WT)
+            child.breeding_weight(females[n].weight, males[n].weight)
+            print(females[n].weight)
             children.append(child)
+        n+=1
     return children
 
 def mutate(children, mutate_odds, mutate_min, mutate_max):
     n=0
     while n < len(children):
-        n+=1
-        if mutate_odds >= math.random():
-            children[i].mutate(mutate_min, mutate_max)
+        if mutate_odds >= random.random():
+            children[n].mutate(mutate_min, mutate_max)
         else :
-            children[i] = children[i]
+            children[n] = children[n]
+        n+=1
     return children
 
 generations = 0
@@ -121,19 +118,21 @@ while popl_fitness < 1 and generations < GENERATION_LIMIT:
     selected_females = selector(parents, NUM_MEN, True)
     selected_males = selector(parents, NUM_MEN, False)
     children = breed(selected_males, selected_females, FAMILY_SIZE)
+    print(children)
     weight_hold = []
     children = mutate(children, MUTATE_ODDS, MUTATE_MIN, MUTATE_MAX)
     place_hold = selected_males + selected_females
     parents = place_hold + children
+    n = 0
     for i in parents:
         weight_hold.append(i.weight)
     popl_fitness = fitness(parents, GOAL)
-    print("Generation " + generations + " fitness: " + popl_fitness)
+    print("Generation " + str(generations) + " fitness: " + str(popl_fitness))
     ave_wt.append(math.floor(statistics.mean(weight_hold)))
     generations+=1
-print("average weight per generation = " + ave_wt)
-print("number of generation = " + generations)
-print("number of years = " + Math.floor(generations / LITTERS_PER_YEAR))
+print("average weight per generation = " + str(ave_wt))
+print("number of generation = " + str(generations))
+print("number of years = " + str(math.floor(generations / FAMILIES_PER_YEAR)))
 
 
 
