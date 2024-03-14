@@ -31,7 +31,10 @@ class human:
             x = (b-a) * (b-c)
             self.weight = math.floor(b - math.sqrt(x*(1.0-u)))
     def breeding_weight(self, femal_wt, mal_wt):
-        self.weight = random.randrange(mal_wt, femal_wt)  
+        if femal_wt == mal_wt:
+            self.weight = mal_wt
+        else:
+            self.weight = random.randrange(femal_wt, mal_wt)  
     def mutate(self, mutate_min, mutate_max):
         self.weight = math.ceil(self.weight * random.uniform(mutate_min, mutate_max))  
 
@@ -58,7 +61,7 @@ def fitness(population, goal):
     return ave/goal
 
 def selector(population, to_retain, truf):
-    sorted_population = sorted(population, key = lambda x: x.weight, reverse=True)
+    sorted_population = sorted(population, key = lambda x: x.weight, reverse=False)
     if len(sorted_population) > to_retain:
         sorted_population = sorted_population[0:to_retain]
     to_retain_by_sex = math.floor(to_retain/2)
@@ -70,7 +73,7 @@ def selector(population, to_retain, truf):
     elif truf == False:
         return males
 
-def breed(males, females, family_size):
+def breed(females, males, family_size):
     random.shuffle(males)
     random.shuffle(females)
     ave_length = math.floor((len(males) + len(females))/2)
@@ -82,7 +85,6 @@ def breed(males, females, family_size):
             n1+=1
             child = human(INITIAL_MIN_WT)
             child.breeding_weight(females[n].weight, males[n].weight)
-            print(females[n].weight)
             children.append(child)
         n+=1
     return children
@@ -117,8 +119,7 @@ ave_wt = []
 while popl_fitness < 1 and generations < GENERATION_LIMIT:
     selected_females = selector(parents, NUM_MEN, True)
     selected_males = selector(parents, NUM_MEN, False)
-    children = breed(selected_males, selected_females, FAMILY_SIZE)
-    print(children)
+    children = breed(selected_females, selected_males, FAMILY_SIZE)
     weight_hold = []
     children = mutate(children, MUTATE_ODDS, MUTATE_MIN, MUTATE_MAX)
     place_hold = selected_males + selected_females
