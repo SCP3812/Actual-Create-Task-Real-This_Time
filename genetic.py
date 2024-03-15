@@ -63,30 +63,32 @@ def fitness(population, goal):
 def selector(population, to_retain, truf):
     sorted_population = sorted(population, key = lambda x: x.weight, reverse=False)
     if len(sorted_population) > to_retain:
-        sorted_population = sorted_population[0:to_retain]
+        sorted_population = sorted_population[-to_retain::1]
     to_retain_by_sex = math.floor(to_retain/2)
     members_per_sex = math.floor(len(sorted_population)/2)
     females = sorted_population[0:members_per_sex]
     males = sorted_population[members_per_sex:len(sorted_population)]
+    selected_females = females[-to_retain_by_sex::1]
+    selected_males = males[-to_retain_by_sex::1]
     if truf == True:
-        return females[0:5]
+        return selected_females
     elif truf == False:
-        return males[5:len(males)]
+        return selected_males
 
 def breed(females, males, family_size):
     random.shuffle(males)
     random.shuffle(females)
     ave_length = math.floor((len(males) + len(females))/2)
     children = []
-    n=0
-    while n < ave_length:
-        n1=0
-        while n1 < FAMILY_SIZE:
-            n1+=1
+    n1=0
+    while n1 < ave_length:
+        n=0
+        while n < FAMILY_SIZE:
+            n+=1
             child = human(INITIAL_MIN_WT)
-            child.breeding_weight(females[n].weight, males[n].weight)
+            child.breeding_weight(females[n1].weight, males[n1].weight)
             children.append(child)
-        n+=1
+        n1+=1
     return children
 
 def mutate(children, mutate_odds, mutate_min, mutate_max):
