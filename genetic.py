@@ -31,10 +31,10 @@ class human:
             x = (b-a) * (b-c)
             self.weight = math.floor(b - math.sqrt(x*(1.0-u)))
     def breeding_weight(self, femal_wt, mal_wt):
-        if femal_wt == mal_wt:
-            self.weight = mal_wt
-        else:
-            self.weight = random.randrange(femal_wt, mal_wt)  
+            if femal_wt == mal_wt:
+                self.weight = random.randrange(femal_wt, mal_wt+1) 
+            else:
+                self.weight = random.randrange(femal_wt, mal_wt)  
     def mutate(self, mutate_min, mutate_max):
         self.weight = math.ceil(self.weight * random.uniform(mutate_min, mutate_max))  
 
@@ -69,9 +69,9 @@ def selector(population, to_retain, truf):
     females = sorted_population[0:members_per_sex]
     males = sorted_population[members_per_sex:len(sorted_population)]
     if truf == True:
-        return females
+        return females[0:5]
     elif truf == False:
-        return males
+        return males[5:len(males)]
 
 def breed(females, males, family_size):
     random.shuffle(males)
@@ -116,7 +116,9 @@ print("number to retain = " + str(NUM_MEN))
 
 ave_wt = []
 
-while popl_fitness < 1 and generations < GENERATION_LIMIT:
+stop = False
+
+while popl_fitness < 1 and generations < GENERATION_LIMIT and stop == False:
     selected_females = selector(parents, NUM_MEN, True)
     selected_males = selector(parents, NUM_MEN, False)
     children = breed(selected_females, selected_males, FAMILY_SIZE)
@@ -124,16 +126,25 @@ while popl_fitness < 1 and generations < GENERATION_LIMIT:
     children = mutate(children, MUTATE_ODDS, MUTATE_MIN, MUTATE_MAX)
     place_hold = selected_males + selected_females
     parents = place_hold + children
-    n = 0
     for i in parents:
         weight_hold.append(i.weight)
     popl_fitness = fitness(parents, GOAL)
     print("Generation " + str(generations) + " fitness: " + str(popl_fitness))
     ave_wt.append(math.floor(statistics.mean(weight_hold)))
+    if math.floor(statistics.mean(weight_hold)) < 100:
+        pop_wts = []
+        n=0
+        while n < NUM_MEN:
+            pop_wts.append(parents[n].weight)
+            n+=1
+        print("population weights = " + str(pop_wts))
+        stop = True
     generations+=1
 print("average weight per generation = " + str(ave_wt))
-print("number of generation = " + str(generations))
+print("number of generations = " + str(generations))
 print("number of years = " + str(math.floor(generations / FAMILIES_PER_YEAR)))
+
+
 
 
 
