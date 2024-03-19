@@ -7,9 +7,18 @@ import statistics
 
 GOAL = 50000
 NUM_UTOP = 20 
-INITIAL_MIN_WT = 200
-INITIAL_MAX_WT = 600
-INITIAL_MODE_WT = 300 
+INIT_MIN_INT = 50
+INITIAL_MAX_INT = 200
+INITIAL_MODE_INT = 100 
+INIT_MIN_SOC = 50
+INITIAL_MAX_SOC = 200
+INITIAL_MODE_SOC = 100 
+INIT_MIN_ULT = 50
+INITIAL_MAX_ULT = 200
+INITIAL_MODE_ULT = 100 
+INITIAL_MIN_LIB = 50
+INITIAL_MAX_LIB = 300
+INITIAL_MODE_LIB = 300
 MUTATE_ODDS = 0.01
 MUTATE_MIN = 0.5
 MUTATE_MAX = 1.2
@@ -18,9 +27,12 @@ FAMILIES_PER_YEAR = 10
 GENERATION_LIMIT = 500
 
 class utopians:
-    def __init__(self, weight, sexzz):
-        self.weight = weight
+    def __init__(self, sex, socialization, intelligence, ultraviolence, libido):
         self.sex = sex
+        self.socialization = socialization
+        self.intelligence = intelligence
+        self.libido = libido
+        self.ultraviolence = ultraviolence
     def create(self,a,b,c):
         fc = (c - a)/(b - a)
         u = random.random()
