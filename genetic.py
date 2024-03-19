@@ -18,7 +18,7 @@ FAMILIES_PER_YEAR = 10
 GENERATION_LIMIT = 500
 
 class utopians:
-    def __init__(self, weight, sexzz):
+    def __init__(self, weight, sex):
         self.weight = weight
         self.sex = sex
     def create(self,a,b,c):
