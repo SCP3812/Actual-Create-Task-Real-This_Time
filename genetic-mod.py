@@ -5,8 +5,8 @@ import statistics
 # https://editor.p5js.org/Koala_Sloth/sketches/Q4IbqVQhN
 #create a program which simulates the downfall of western civilization
 
-GOAL = 500
-NUM_UTOP = 20 
+GOAL = int(input("Choose a number between 0 and 1000: "))
+NUM_UTOP = int(input("Choose a starting population: ")) 
 INITIAL_MIN_SOC = 50
 INITIAL_MAX_SOC = 200
 INITIAL_MODE_SOC = 100 
@@ -19,9 +19,10 @@ INITIAL_MODE_LIB = 300
 MUTATE_ODDS = 0.01
 MUTATE_MIN = 0.5
 MUTATE_MAX = 1.2
-FAMILY_SIZE = 8
+FAMILY_SIZE = int(input("Choose the average amount of children per parent couple: "))
 FAMILIES_PER_YEAR = 10
 GENERATION_LIMIT = 500
+SortBy = input("Choose the Attribute to Maximize: ")
 
 class utopians:
     def __init__(self, sex, socialization, ultraviolence, libido):
@@ -108,7 +109,12 @@ def fitness(population, goal):
     return ave/goal
 
 def selector(population, to_retain, truf):
-    sorted_population = sorted(population, key = lambda x: x.socialization, reverse=False)
+    if SortBy == "socialization":
+            sorted_population = sorted(population, key = lambda x: x.socialization, reverse=False) 
+    elif SortBy == "ultraviolence":
+            sorted_population = sorted(population, key = lambda x: x.ultraviolence, reverse=False) 
+    elif SortBy == "libido":
+            sorted_population = sorted(population, key = lambda x: x.libido, reverse=False)
     if len(sorted_population) > to_retain:
         sorted_population = sorted_population[-to_retain::1]
     to_retain_by_sex = math.floor(to_retain/2)
